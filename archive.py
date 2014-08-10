@@ -3,11 +3,33 @@
 '''Script to create/maintain incremental backups'''
 
 from argparse import ArgumentParser,RawDescriptionHelpFormatter
-from os import path
+from os import path,mkdir,symlink,unlink
 from configparser import ConfigParser
+from datetime import date
+from subprocess import call
 
 def archive_preset( preset, source, destination ):
-    pass
+    today = date.today().strftime( '%Y-%m-%d' )
+    destination_path = destination + '/' + preset + '/'
+
+    # Avoid error messages during the first run
+    if not path.isdir( destination_path ):
+        mkdir( destination_path )
+        mkdir( destination_path + '/' + today )
+        symlink( destination_path + '/' + today, destination_path + '/latest' )
+
+    # Compose the rsync call
+    sync_command = '/usr/bin/rsync'
+    sync_command += ' --verbose --archive --exclude=lost+found'
+    sync_command += ' --link-dest=' + destination_path + '/latest '
+    sync_command += source + '/ '
+    sync_command += destination_path + '/' + today
+
+    call( sync_command, shell=True )
+
+    # Update link to latest backup
+    unlink( destination_path + '/latest' )
+    symlink( destination_path + '/' + today, destination_path + '/latest' )
 
 def process_preset_files( preset_files ):
     for preset_file in preset_files:
