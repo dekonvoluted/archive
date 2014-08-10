@@ -3,12 +3,34 @@
 '''Script to create/maintain incremental backups'''
 
 from argparse import ArgumentParser,RawDescriptionHelpFormatter
+from os import path
+from configparser import ConfigParser
 
 def archive_preset( preset, source, destination ):
     pass
 
 def process_preset_files( preset_files ):
-    pass
+    for preset_file in preset_files:
+        if not path.isfile( preset_file ):
+            print( preset_file, 'is not a valid input.' )
+        else:
+            config = ConfigParser()
+            config.read( preset_file )
+
+            for section in config.sections():
+                preset = section
+                source = path.realpath( config[ section ][ 'source' ] )
+                destination = path.realpath( config[ section ][ 'destination' ] )
+
+                if not path.isdir( source ):
+                    print( source, 'is not a valid source.' )
+                    exit( 1 )
+
+                if not path.isdir( destination ):
+                    print( destination, 'is not a valid destination.' )
+                    exit( 1 )
+
+                archive_preset( preset, source, destination )
 
 if __name__ == '__main__':
     parser = ArgumentParser( formatter_class=RawDescriptionHelpFormatter, description = '''
