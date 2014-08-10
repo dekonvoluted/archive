@@ -2,6 +2,8 @@
 
 '''Script to create/maintain incremental backups'''
 
+__version__ = '1.0'
+
 from argparse import ArgumentParser,RawDescriptionHelpFormatter
 from os import path,mkdir,symlink,unlink
 from configparser import ConfigParser
@@ -66,6 +68,7 @@ if __name__ == '__main__':
     A single preset file can contain many such presets.
     Multiple preset files can be supplied as arguments.''' )
     parser.add_argument( 'PRESETS', nargs='+', help='One or more INI files containing presets.' )
+    parser.add_argument( '--version', action='version', version = __version__ )
     args = parser.parse_args()
 
     process_preset_files( args.PRESETS )
