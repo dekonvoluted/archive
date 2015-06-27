@@ -2,7 +2,7 @@
 
 '''Script to create/maintain incremental backups'''
 
-__version__ = '1.0'
+__version__ = '1.1'
 
 from argparse import ArgumentParser,RawDescriptionHelpFormatter
 from os import path,mkdir,symlink,unlink
