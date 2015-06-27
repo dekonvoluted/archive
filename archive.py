@@ -22,7 +22,7 @@ def archive_preset( preset, source, destination ):
 
     # Compose the rsync call
     sync_command = '/usr/bin/rsync'
-    sync_command += ' --verbose --archive --exclude=lost+found'
+    sync_command += ' --verbose --archive --xattrs --exclude=lost+found'
     sync_command += ' --link-dest=' + destination_path + '/latest '
     sync_command += source + '/ '
     sync_command += destination_path + '/' + today
